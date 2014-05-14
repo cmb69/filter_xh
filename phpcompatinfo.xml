@@ -11,7 +11,8 @@
 
     <excludes>
         <exclude id="filter">
-            <directory name="test"/>
+            <directory name="tests"/>
+            <directory name="vendor"/>
         </exclude>
     </excludes>
 </phpcompatinfo>
