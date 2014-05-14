@@ -104,9 +104,11 @@
         <move todir="dist">
             <fileset dir="export">
                 <exclude name="tests/**"/>
-                <exclude name="filter.komodoproject"/>
                 <exclude name="build.xml"/>
+                <exclude name="composer.json"/>
+                <exclude name="composer.lock"/>
                 <exclude name="coverage.xml"/>
+                <exclude name="filter.komodoproject"/>
                 <exclude name="phpcompatinfo.xml"/>
                 <exclude name="TODO"/>
             </fileset>
