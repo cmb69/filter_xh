@@ -23,6 +23,18 @@ require_once $pth['folder']['plugin_classes'] . 'Model.php';
 require_once $pth['folder']['plugin_classes'] . 'Presentation.php';
 
 /**
+ * Renders the filter selection.
+ *
+ * @return string (X)HTML.
+ */
+function Filter_selection()
+{
+    global $_Filter_controller;
+
+    return $_Filter_controller->renderFilterSelection();
+}
+
+/**
  * The filter controller.
  */
 $_Filter_controller = new Filter_Controller(new Filter_CommandFactory());

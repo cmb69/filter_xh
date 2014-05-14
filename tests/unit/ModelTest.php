@@ -75,7 +75,8 @@ class ModelTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('user', array(0, 1)),
-            array('developer', array(0, 2))
+            array('developer', array(0, 2)),
+            array('', range(0, 2))
         );
     }
 

@@ -29,15 +29,45 @@ require_once './classes/Presentation.php';
 class CommandFactoryTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * The subject under test.
+     *
+     * @var Filter_CommandFactory
+     */
+    private $_subject;
+
+    /**
+     * Sets up the test fixture.
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        $this->_subject = new Filter_CommandFactory();
+    }
+
+    /**
      * Tests the make filter pages command.
      *
      * @return void
      */
     public function testMakeFilterPagesCommand()
     {
-        $factory = new Filter_CommandFactory();
         $this->assertInstanceOf(
-            'Filter_FilterPagesCommand', $factory->makeFilterPagesCommand('user')
+            'Filter_FilterPagesCommand',
+            $this->_subject->makeFilterPagesCommand('user')
+        );
+    }
+
+    /**
+     * Tests the make filter selection command.
+     *
+     * @return void
+     */
+    public function testMakeFilterSelectionCommand()
+    {
+        $this->assertInstanceOf(
+            'Filter_FilterSelectionCommand',
+            $this->_subject->makeFilterSelectionCommand(array())
         );
     }
 }

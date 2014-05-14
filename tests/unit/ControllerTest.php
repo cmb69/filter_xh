@@ -45,27 +45,29 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     private $_commandFactory;
 
     /**
-     * The filter pages command.
+     * The setcookie() spy.
      *
-     * @var Filter_FilterPagesCommand
+     * @var object
      */
-    private $_command;
-
     private $_setCookieSpy;
 
     /**
      * Sets up the test fixture.
      *
      * @return void
+     *
+     * @global array The configuration of the plugins.
      */
     public function setUp()
     {
+        global $plugin_cf;
+
         if (!defined('CMSIMPLE_ROOT')) {
             define('CMSIMPLE_ROOT', '');
         }
-        $this->_command = $this->getMockBuilder('Filter_FilterPagesCommand')
-            ->disableOriginalConstructor()->getMock();
-        $this->_command->expects($this->once())->method('execute');
+        $plugin_cf = array(
+            'filter' => array('categories' => 'foo, bar, baz')
+        );
         $this->_commandFactory = $this->getMock('Filter_CommandFactory');
         $this->_subject = new Filter_Controller($this->_commandFactory);
         $stslStub = new PHPUnit_Extensions_MockFunction('stsl', $this->_subject);
@@ -82,9 +84,12 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testDispatchExecutesFilterPagesCommand()
     {
+        $command = $this->getMockBuilder('Filter_FilterPagesCommand')
+            ->disableOriginalConstructor()->getMock();
+        $command->expects($this->once())->method('execute');
         $this->_commandFactory->expects($this->once())
             ->method('makeFilterPagesCommand')->with($this->equalTo(''))
-            ->will($this->returnValue($this->_command));
+            ->will($this->returnValue($command));
         $this->_subject->dispatch();
     }
 
@@ -97,9 +102,12 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testDispatchExecutesFilterPagesCommandWithCategoryFromGet()
     {
         $_GET['filter_category'] = 'foo';
+        $command = $this->getMockBuilder('Filter_FilterPagesCommand')
+            ->disableOriginalConstructor()->getMock();
+        $command->expects($this->once())->method('execute');
         $this->_commandFactory->expects($this->once())
             ->method('makeFilterPagesCommand')->with($this->equalTo('foo'))
-            ->will($this->returnValue($this->_command));
+            ->will($this->returnValue($command));
         $this->_setCookieSpy->expects($this->any());
         $this->_subject->dispatch();
     }
@@ -112,9 +120,12 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testDispatchSetsCookieWithCategoryFromGet()
     {
         $_GET['filter_category'] = 'foo';
+        $command = $this->getMockBuilder('Filter_FilterPagesCommand')
+            ->disableOriginalConstructor()->getMock();
+        $command->expects($this->once())->method('execute');
         $this->_commandFactory->expects($this->any())
             ->method('makeFilterPagesCommand')
-            ->will($this->returnValue($this->_command));
+            ->will($this->returnValue($command));
         $this->_setCookieSpy->expects($this->once())->with(
             $this->equalTo('filter_category'), $this->equalTo('foo')
         );
@@ -130,10 +141,51 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testDispatchExecutesFilterPagesCommandWithCategoryFromCookie()
     {
         $_COOKIE['filter_category'] = 'foo';
+        $command = $this->getMockBuilder('Filter_FilterPagesCommand')
+            ->disableOriginalConstructor()->getMock();
+        $command->expects($this->once())->method('execute');
         $this->_commandFactory->expects($this->once())
             ->method('makeFilterPagesCommand')->with($this->equalTo('foo'))
-            ->will($this->returnValue($this->_command));
+            ->will($this->returnValue($command));
         $this->_subject->dispatch();
+    }
+
+    /**
+     * Tests render filter selection.
+     *
+     * @return void
+     */
+    public function testRenderFilterSelection()
+    {
+        $command = $this->getMockBuilder('Filter_FilterSelectionCommand')
+            ->disableOriginalConstructor()->getMock();
+        $this->_commandFactory->expects($this->once())
+            ->method('makeFilterSelectionCommand')
+            ->with($this->equalTo(array('', 'foo', 'bar', 'baz')))
+            ->will($this->returnValue($command));
+        $this->_subject->renderFilterSelection();
+    }
+
+    /**
+     * Tests render empty filter selection.
+     *
+     * @return void
+     *
+     * @global array The configuration of the plugins.
+     */
+    public function testRenderEmptyFilterSelection()
+    {
+        global $plugin_cf;
+
+        $plugin_cf['filter']['categories'] = '';
+        $command = $this->getMockBuilder('Filter_FilterPagesCommand')
+            ->disableOriginalConstructor()->getMock();
+        $this->_commandFactory->expects($this->once())
+            ->method('makeFilterSelectionCommand')
+            ->with($this->equalTo(array()))
+            ->will($this->returnValue($command));
+        $this->_subject = new Filter_Controller($this->_commandFactory);
+        $this->_subject->renderFilterSelection();
     }
 }
 

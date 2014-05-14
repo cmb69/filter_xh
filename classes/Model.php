@@ -81,6 +81,9 @@ class Filter_Model
      */
     public function hidePages()
     {
+        if ($this->_category == '') {
+            return;
+        }
         for ($i = 0; $i < $this->_pageCount; ++$i) {
             if (!$this->_pageHeadingHasClass($i)) {
                 $this->_hidePage($i);
