@@ -95,6 +95,7 @@ class Filter_Controller
     public function dispatch()
     {
         $this->_determineCategory();
+        $this->_setCookie();
         $this->_filterPages();
         if ($this->_isAdministration) {
             $this->_administrationDispatch();
@@ -109,10 +110,14 @@ class Filter_Controller
     private function _determineCategory()
     {
         if (isset($_GET['filter_category'])) {
-            $this->_category = stsl($_GET['filter_category']);
-            $this->_setCookie();
+            $category = stsl($_GET['filter_category']);
         } elseif (isset($_COOKIE['filter_category'])) {
-            $this->_category = stsl($_COOKIE['filter_category']);
+            $category = stsl($_COOKIE['filter_category']);
+        } else {
+            $category = '';
+        }
+        if (in_array($category, $this->_categories)) {
+            $this->_category = $category;
         } else {
             $this->_category = '';
         }
@@ -125,7 +130,9 @@ class Filter_Controller
      */
     private function _setCookie()
     {
-        setcookie('filter_category', $this->_category, 0, CMSIMPLE_ROOT);
+        if (isset($_GET['filter_category'])) {
+            setcookie('filter_category', $this->_category, 0, CMSIMPLE_ROOT);
+        }
     }
 
     /**

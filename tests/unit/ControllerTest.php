@@ -108,6 +108,25 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testDispatchExecutesFilterPagesCommandWithCategoryFromGet()
     {
+        $_GET['filter_category'] = 'foobar';
+        $command = $this->getMockBuilder('Filter_FilterPagesCommand')
+            ->disableOriginalConstructor()->getMock();
+        $command->expects($this->once())->method('execute');
+        $this->_commandFactory->expects($this->once())
+            ->method('makeFilterPagesCommand')->with($this->equalTo(''))
+            ->will($this->returnValue($command));
+        $this->_setCookieSpy->expects($this->any());
+        $this->_subject->dispatch();
+    }
+
+    /**
+     * Tests that dispatch executes a filter pages command with an invalid
+     * category from a GET parameter.
+     *
+     * @return void
+     */
+    public function testDispatchExecutesFilterPagesCommandWithInvalidCatFromGet()
+    {
         $_GET['filter_category'] = 'foo';
         $command = $this->getMockBuilder('Filter_FilterPagesCommand')
             ->disableOriginalConstructor()->getMock();
@@ -153,6 +172,24 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $command->expects($this->once())->method('execute');
         $this->_commandFactory->expects($this->once())
             ->method('makeFilterPagesCommand')->with($this->equalTo('foo'))
+            ->will($this->returnValue($command));
+        $this->_subject->dispatch();
+    }
+
+    /**
+     * Tests that dispatch executes a filter pages command with an invalid
+     * category from a cookie..
+     *
+     * @return void
+     */
+    public function testDispatchExecutesFilterPagesCommandWithInvalidCatFromCookie()
+    {
+        $_COOKIE['filter_category'] = 'foobar';
+        $command = $this->getMockBuilder('Filter_FilterPagesCommand')
+            ->disableOriginalConstructor()->getMock();
+        $command->expects($this->once())->method('execute');
+        $this->_commandFactory->expects($this->once())
+            ->method('makeFilterPagesCommand')->with($this->equalTo(''))
             ->will($this->returnValue($command));
         $this->_subject->dispatch();
     }
