@@ -33,6 +33,13 @@ class Filter_Controller
     private $_commandFactory;
 
     /**
+     * Whether the plugin adminstration is requested.
+     *
+     * @var bool
+     */
+    private $_isAdministration;
+
+    /**
      * The available categories.
      *
      * @var array
@@ -55,9 +62,10 @@ class Filter_Controller
      */
     public function __construct(Filter_CommandFactory $commandFactory)
     {
-        global $plugin_cf;
+        global $adm, $filter, $plugin_cf;
 
         $this->_commandFactory = $commandFactory;
+        $this->_isAdministration =  ($adm && $filter == 'true');
         $this->_categories = $this->_splitCategories(
             $plugin_cf['filter']['categories']
         );
@@ -86,6 +94,20 @@ class Filter_Controller
      */
     public function dispatch()
     {
+        $this->_determineCategory();
+        $this->_filterPages();
+        if ($this->_isAdministration) {
+            $this->_administrationDispatch();
+        }
+    }
+
+    /**
+     * Determines the current category.
+     *
+     * @return void
+     */
+    private function _determineCategory()
+    {
         if (isset($_GET['filter_category'])) {
             $this->_category = stsl($_GET['filter_category']);
             $this->_setCookie();
@@ -94,7 +116,6 @@ class Filter_Controller
         } else {
             $this->_category = '';
         }
-        $this->_filterPages();
     }
 
     /**
@@ -116,6 +137,29 @@ class Filter_Controller
     {
         $this->_commandFactory->makeFilterPagesCommand($this->_category)
             ->execute();
+    }
+
+    /**
+     * Dispatches on the current administration request.
+     *
+     * @return void
+     *
+     * @global string The value of the action GP parameter.
+     * @global string The value of the admin GP parameter.
+     * @global string The output of the contents area.
+     */
+    private function _administrationDispatch()
+    {
+        global $action, $admin, $o;
+
+        $o .= print_plugin_admin('off');
+        switch ($admin) {
+        case '':
+            $this->_commandFactory->makePluginInfoCommand()->execute();
+            break;
+        default:
+            $o .= plugin_admin_common($action, $admin, 'filter');
+        }
     }
 
     /**
@@ -164,6 +208,16 @@ class Filter_CommandFactory
     public function makeFilterSelectionCommand($categories)
     {
         return new Filter_FilterSelectionCommand($categories);
+    }
+
+    /**
+     * Returns a new plugin info command.
+     *
+     * @return Filter_PluginInfoCommand
+     */
+    public function makePluginInfoCommand()
+    {
+        return new Filter_PluginInfoCommand();
     }
 }
 
@@ -298,6 +352,42 @@ class Filter_FilterSelectionCommand
         $label = $category != '' ? $category : $plugin_tx['filter']['label_all'];
         $result = '<li><a href="' . $href. '">' . $label . '</a></li>';
         return $result;
+    }
+}
+
+/**
+ * The plugin info command.
+ *
+ * @category CMSimple_XH
+ * @package  Filter
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Filter_XH
+ */
+class Filter_PluginInfoCommand
+{
+    /**
+     * Executes the command.
+     *
+     * @return void
+     *
+     * @global string The contents area.
+     */
+    public function execute()
+    {
+        global $o;
+
+        $o .= $this->_render();
+    }
+
+    /**
+     * Renders the plugin info.
+     *
+     * @return string (X)HTML.
+     */
+    private function _render()
+    {
+        return '<h1>Filter &ndash; Info</h1>';
     }
 }
 

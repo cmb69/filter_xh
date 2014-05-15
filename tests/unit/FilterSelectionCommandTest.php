@@ -14,6 +14,8 @@
  * @link      http://3-magi.net/?CMSimple_XH/Filter_XH
  */
 
+require_once './classes/Presentation.php';
+
 /**
  * Testing the filter selection command.
  *

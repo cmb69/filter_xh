@@ -16,6 +16,9 @@
 
 require_once './vendor/autoload.php';
 
+require_once '../../cmsimple/functions.php';
+require_once '../../cmsimple/adminfuncs.php';
+
 require_once './classes/Model.php';
 require_once './classes/Presentation.php';
 
@@ -70,10 +73,14 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         );
         $this->_commandFactory = $this->getMock('Filter_CommandFactory');
         $this->_subject = new Filter_Controller($this->_commandFactory);
-        $stslStub = new PHPUnit_Extensions_MockFunction('stsl', $this->_subject);
-        $stslStub->expects($this->any())->will($this->returnArgument(0));
         $this->_setCookieSpy = new PHPUnit_Extensions_MockFunction(
             'setcookie', $this->_subject
+        );
+        new PHPUnit_Extensions_MockFunction(
+            'plugin_admin_common', $this->_subject
+        );
+        new PHPUnit_Extensions_MockFunction(
+            'print_plugin_admin', $this->_subject
         );
     }
 
@@ -147,6 +154,65 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->_commandFactory->expects($this->once())
             ->method('makeFilterPagesCommand')->with($this->equalTo('foo'))
             ->will($this->returnValue($command));
+        $this->_subject->dispatch();
+    }
+
+    /**
+     * Tests that dispatch executes a plugin info command.
+     *
+     * @return void
+     *
+     * @global bool   Whether we're in admin mode.
+     * @global string Whether the filter plugin administration has been requested.
+     */
+    public function testDispatchExecutesPluginInfoCommand()
+    {
+        global $adm, $filter;
+
+        $adm = true;
+        $filter = 'true';
+        $command = $this->getMock('Filter_PluginInfoCommand');
+        $command->expects($this->once())->method('execute');
+        $this->_commandFactory->expects($this->once())
+            ->method('makePluginInfoCommand')
+            ->will($this->returnValue($command));
+        $command = $this->getMockBuilder('Filter_FilterPagesCommand')
+            ->disableOriginalConstructor()->getMock();
+        $this->_commandFactory->expects($this->once())
+            ->method('makeFilterPagesCommand')
+            ->will($this->returnValue($command));
+        $this->_subject = new Filter_Controller($this->_commandFactory);
+        new PHPUnit_Extensions_MockFunction('print_plugin_admin', $this->_subject);
+        $this->_subject->dispatch();
+    }
+
+    /**
+     * Tests that dispatch handles common administration.
+     *
+     * @return void
+     *
+     * @global bool   Whether we're in administration mode.
+     * @global string Whether the filter plugin administration is requested.
+     * @global string The value of the admin GP parameter.
+     */
+    public function testDispatchHandlesCommonAdministration()
+    {
+        global $adm, $filter, $admin;
+
+        $adm = true;
+        $filter = 'true';
+        $admin = 'plugin_config';
+        $command = $this->getMockBuilder('Filter_FilterPagesCommand')
+            ->disableOriginalConstructor()->getMock();
+        $this->_commandFactory->expects($this->once())
+            ->method('makeFilterPagesCommand')
+            ->will($this->returnValue($command));
+        $this->_subject = new Filter_Controller($this->_commandFactory);
+        $pluginAdminCommonSpy = new PHPUnit_Extensions_MockFunction(
+            'plugin_admin_common', $this->_subject
+        );
+        $pluginAdminCommonSpy->expects($this->once());
+        new PHPUnit_Extensions_MockFunction('print_plugin_admin', $this->_subject);
         $this->_subject->dispatch();
     }
 

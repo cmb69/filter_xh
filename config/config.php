@@ -1,5 +1,5 @@
 <?php
 
-$plugin_cf['filter']['categories']="anwender";
+$plugin_cf['filter']['categories']="";
 
 ?>

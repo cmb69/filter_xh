@@ -46,7 +46,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the make filter pages command.
+     * Tests make filter pages command.
      *
      * @return void
      */
@@ -59,7 +59,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the make filter selection command.
+     * Tests make filter selection command.
      *
      * @return void
      */
@@ -68,6 +68,19 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(
             'Filter_FilterSelectionCommand',
             $this->_subject->makeFilterSelectionCommand(array())
+        );
+    }
+
+    /**
+     * Tests make plugin info command.
+     *
+     * @return void
+     */
+    public function testMakePluginInfoCommand()
+    {
+        $this->assertInstanceOf(
+            'Filter_PluginInfoCommand',
+            $this->_subject->makePluginInfoCommand()
         );
     }
 }
