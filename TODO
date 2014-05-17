@@ -1,0 +1,3 @@
+* redirect to previous visible page, if changing selection result in current
+  page to be hidden (sugg. by Hartmut)
+* page internal filtering with JavaScript
