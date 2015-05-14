@@ -48,12 +48,12 @@ class Filter_FilterSelectionCommand
      * @global string The script name.
      * @global string The current page URL.
      */
-    public function __construct($categories)
+    public function __construct(array $categories)
     {
         global $sn, $su;
 
         $this->pageUrl = $sn . '?' . $su;
-        $this->categories = (array) $categories;
+        $this->categories = $categories;
     }
 
     /**

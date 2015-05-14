@@ -43,7 +43,7 @@ class Filter_CommandFactory
      *
      * @return Filter_FilterSelectionCommand
      */
-    public function makeFilterSelectionCommand($categories)
+    public function makeFilterSelectionCommand(array $categories)
     {
         return new Filter_FilterSelectionCommand($categories);
     }

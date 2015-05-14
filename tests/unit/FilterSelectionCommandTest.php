@@ -95,7 +95,7 @@ class FilterSelectionCommandTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    protected function assertResultMatches($matcher)
+    protected function assertResultMatches(array $matcher)
     {
         @$this->assertTag($matcher, $this->subject->execute());
     }

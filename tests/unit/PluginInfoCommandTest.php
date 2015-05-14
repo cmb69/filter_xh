@@ -55,7 +55,7 @@ class PluginInfoCommandTest extends PHPUnit_Framework_TestCase
      *
      * @global string The contents area.
      */
-    protected function assertOutputMatches($matcher)
+    protected function assertOutputMatches(array $matcher)
     {
         global $o;
 
