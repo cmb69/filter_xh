@@ -13,11 +13,6 @@
  * @link      http://3-magi.net/?CMSimple_XH/Filter_XH
  */
 
-if (!defined('CMSIMPLE_XH_VERSION')) {
-    header('HTTP/1.0 403 Forbidden');
-    exit;
-}
-
 /**
  * Renders the filter selection.
  *
