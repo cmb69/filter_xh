@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Filter" default="default">
-
-    <!-- Properties -->
+<project name="Filter" default="help">
 
     <property name="styledir" value="C:\xampp\php\data\phing\etc"/>
-
-    <!-- Filesets -->
 
     <fileset id="php-sources" dir=".">
         <include name="index.php"/>
@@ -17,11 +13,13 @@
         <include name="*Test.php"/>
     </fileset>
 
+    <target name="help" description="lists available targets">
+        <exec command="phing -l" outputProperty="help"/>
+        <echo>${help}</echo>
+    </target>
 
-    <!-- Checks -->
-
-    <target name="sniff">
-        <phpcodesniffer standard="PEAR" format="full">
+    <target name="sniff" description="checks adherence to PEAR CS">
+        <phpcodesniffer standard="PEAR">
             <fileset refid="php-sources"/>
             <fileset refid="unit-tests"/>
         </phpcodesniffer>
@@ -33,9 +31,7 @@
               logoutput="true"/>
     </target>
 
-    <!-- Tests -->
-
-    <target name="unit-tests">
+    <target name="unit-tests" description="runs all unit tests">
         <phpunit haltonerror="true" haltonfailure="true">
             <formatter type="plain" usefile="false"/>
             <batchtest>
@@ -56,17 +52,13 @@
         </phpunit>
     </target>
 -->
-    <!-- Code coverage -->
-
-    <target name="coverage">
+    <target name="coverage" description="generates coverage report">
         <exec command="phpunit --configuration coverage.xml" logoutput="true"/>
     </target>
 
-    <!-- Documentation -->
-
-    <target name="php-doc">
-        <phpdoc title="Filter_XH Developer Documentation" destdir="doc/php"
-                output="HTML:frames:default" defaultpackagename="Filter"
+    <target name="doc" description="generates the developer documentation">
+        <phpdoc title="Filter_XH Developer Documentation" destdir="doc"
+                output="HTML:Smarty:HandS" defaultpackagename="Filter"
                 defaultcategoryname="CMSimple_XH">
             <fileset refid="php-sources"/>
             <projdocfileset dir=".">
@@ -76,17 +68,11 @@
         </phpdoc>
     </target>
 
-<!--    <target name="js-doc">
-        <exec command="jsdoc -destination doc/js pagemanager.js" checkreturn="true"/>
-    </target>
--->
-    <target name="doc" depends="php-doc"/>
-
-    <!-- Build -->
-
-    <target name="build">
+    <target name="build" description="builds a distributable ZIP archive">
         <fail unless="version" message="version is not defined!"/>
-        <svnexport revision="" repositoryurl="." todir="export"/>
+        <exec command="git archive -o export.tar HEAD" checkreturn="true"/>
+        <untar file="export.tar" todir="export"/>
+        <delete file="export.tar"/>
         <move todir="dist">
             <fileset dir="export">
                 <include name="index.php"/>
@@ -105,9 +91,7 @@
                 <exclude name="composer.json"/>
                 <exclude name="composer.lock"/>
                 <exclude name="coverage.xml"/>
-                <exclude name="filter.komodoproject"/>
                 <exclude name="phpcompatinfo.xml"/>
-                <exclude name="TODO"/>
             </fileset>
         </move>
         <delete dir="export"/>
