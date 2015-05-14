@@ -1,5 +1,5 @@
 <?php
 
-$plugin_cf['filter']['categories']="";
+$plugin_cf['filter']['categories']="eins,zwei,drei";
 
 ?>
