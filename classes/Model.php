@@ -29,28 +29,28 @@ class Filter_Model
      *
      * @var string
      */
-    private $_category;
+    protected $category;
 
     /**
      * The contents of the pages.
      *
      * @var array
      */
-    private $_contents;
+    protected $contents;
 
     /**
      * The number of pages.
      *
      * @var int
      */
-    private $_pageCount;
+    protected $pageCount;
 
     /**
      * The menu levels.
      *
      * @var int
      */
-    private $_menuLevels;
+    protected $menuLevels;
 
     /**
      * Initializes a new instance.
@@ -67,10 +67,10 @@ class Filter_Model
     {
         global $c, $cl, $cf;
 
-        $this->_category = $category;
-        $this->_contents = $c;
-        $this->_pageCount = $cl;
-        $this->_menuLevels = (int) $cf['menu']['levels'];
+        $this->category = $category;
+        $this->contents = $c;
+        $this->pageCount = $cl;
+        $this->menuLevels = (int) $cf['menu']['levels'];
     }
 
     /**
@@ -80,12 +80,12 @@ class Filter_Model
      */
     public function hidePages()
     {
-        if ($this->_category == '') {
+        if ($this->category == '') {
             return;
         }
-        for ($i = 0; $i < $this->_pageCount; ++$i) {
-            if (!$this->_pageHeadingHasClass($i)) {
-                $this->_hidePage($i);
+        for ($i = 0; $i < $this->pageCount; ++$i) {
+            if (!$this->pageHeadingHasClass($i)) {
+                $this->hidePage($i);
             }
         }
     }
@@ -97,12 +97,12 @@ class Filter_Model
      *
      * @return bool
      */
-    private function _pageHeadingHasClass($pageIndex)
+    protected function pageHeadingHasClass($pageIndex)
     {
         return (bool) preg_match(
-            '/<h[1-' . $this->_menuLevels . '][^>]+class="(?:[^"]*\s)?'
-            . preg_quote($this->_category, '/') . '(?:\s[^"]*)?"[^>]*>/u',
-            $this->_contents[$pageIndex]
+            '/<h[1-' . $this->menuLevels . '][^>]+class="(?:[^"]*\s)?'
+            . preg_quote($this->category, '/') . '(?:\s[^"]*)?"[^>]*>/u',
+            $this->contents[$pageIndex]
         );
     }
 
@@ -115,7 +115,7 @@ class Filter_Model
      *
      * @global array The content of the pages.
      */
-    private function _hidePage($pageIndex)
+    protected function hidePage($pageIndex)
     {
         global $c;
 

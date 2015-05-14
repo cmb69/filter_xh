@@ -43,7 +43,7 @@ class PluginInfoCommandTest extends PHPUnit_Framework_TestCase
         );
         $subject = new Filter_PluginInfoCommand();
         $subject->execute();
-        $this->_assertOutputMatches($matcher);
+        $this->assertOutputMatches($matcher);
     }
 
     /**
@@ -55,7 +55,7 @@ class PluginInfoCommandTest extends PHPUnit_Framework_TestCase
      *
      * @global string The contents area.
      */
-    private function _assertOutputMatches($matcher)
+    protected function assertOutputMatches($matcher)
     {
         global $o;
 

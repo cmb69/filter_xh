@@ -36,21 +36,21 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      *
      * @var Filter_Controller
      */
-    private $_subject;
+    protected $subject;
 
     /**
      * The command factory.
      *
      * @var Filter_CommandFactory
      */
-    private $_commandFactory;
+    protected $commandFactory;
 
     /**
      * The setcookie() spy.
      *
      * @var object
      */
-    private $_setCookieSpy;
+    protected $setCookieSpy;
 
     /**
      * Sets up the test fixture.
@@ -69,16 +69,16 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $plugin_cf = array(
             'filter' => array('categories' => 'foo, bar, baz')
         );
-        $this->_commandFactory = $this->getMock('Filter_CommandFactory');
-        $this->_subject = new Filter_Controller($this->_commandFactory);
-        $this->_setCookieSpy = new PHPUnit_Extensions_MockFunction(
-            'setcookie', $this->_subject
+        $this->commandFactory = $this->getMock('Filter_CommandFactory');
+        $this->subject = new Filter_Controller($this->commandFactory);
+        $this->setCookieSpy = new PHPUnit_Extensions_MockFunction(
+            'setcookie', $this->subject
         );
         new PHPUnit_Extensions_MockFunction(
-            'plugin_admin_common', $this->_subject
+            'plugin_admin_common', $this->subject
         );
         new PHPUnit_Extensions_MockFunction(
-            'print_plugin_admin', $this->_subject
+            'print_plugin_admin', $this->subject
         );
     }
 
@@ -92,10 +92,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $command = $this->getMockBuilder('Filter_FilterPagesCommand')
             ->disableOriginalConstructor()->getMock();
         $command->expects($this->once())->method('execute');
-        $this->_commandFactory->expects($this->once())
+        $this->commandFactory->expects($this->once())
             ->method('makeFilterPagesCommand')->with($this->equalTo(''))
             ->will($this->returnValue($command));
-        $this->_subject->dispatch();
+        $this->subject->dispatch();
     }
 
     /**
@@ -110,11 +110,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $command = $this->getMockBuilder('Filter_FilterPagesCommand')
             ->disableOriginalConstructor()->getMock();
         $command->expects($this->once())->method('execute');
-        $this->_commandFactory->expects($this->once())
+        $this->commandFactory->expects($this->once())
             ->method('makeFilterPagesCommand')->with($this->equalTo(''))
             ->will($this->returnValue($command));
-        $this->_setCookieSpy->expects($this->any());
-        $this->_subject->dispatch();
+        $this->setCookieSpy->expects($this->any());
+        $this->subject->dispatch();
     }
 
     /**
@@ -129,11 +129,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $command = $this->getMockBuilder('Filter_FilterPagesCommand')
             ->disableOriginalConstructor()->getMock();
         $command->expects($this->once())->method('execute');
-        $this->_commandFactory->expects($this->once())
+        $this->commandFactory->expects($this->once())
             ->method('makeFilterPagesCommand')->with($this->equalTo('foo'))
             ->will($this->returnValue($command));
-        $this->_setCookieSpy->expects($this->any());
-        $this->_subject->dispatch();
+        $this->setCookieSpy->expects($this->any());
+        $this->subject->dispatch();
     }
 
     /**
@@ -147,13 +147,13 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $command = $this->getMockBuilder('Filter_FilterPagesCommand')
             ->disableOriginalConstructor()->getMock();
         $command->expects($this->once())->method('execute');
-        $this->_commandFactory->expects($this->any())
+        $this->commandFactory->expects($this->any())
             ->method('makeFilterPagesCommand')
             ->will($this->returnValue($command));
-        $this->_setCookieSpy->expects($this->once())->with(
+        $this->setCookieSpy->expects($this->once())->with(
             $this->equalTo('filter_category'), $this->equalTo('foo')
         );
-        $this->_subject->dispatch();
+        $this->subject->dispatch();
     }
 
     /**
@@ -168,10 +168,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $command = $this->getMockBuilder('Filter_FilterPagesCommand')
             ->disableOriginalConstructor()->getMock();
         $command->expects($this->once())->method('execute');
-        $this->_commandFactory->expects($this->once())
+        $this->commandFactory->expects($this->once())
             ->method('makeFilterPagesCommand')->with($this->equalTo('foo'))
             ->will($this->returnValue($command));
-        $this->_subject->dispatch();
+        $this->subject->dispatch();
     }
 
     /**
@@ -186,10 +186,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $command = $this->getMockBuilder('Filter_FilterPagesCommand')
             ->disableOriginalConstructor()->getMock();
         $command->expects($this->once())->method('execute');
-        $this->_commandFactory->expects($this->once())
+        $this->commandFactory->expects($this->once())
             ->method('makeFilterPagesCommand')->with($this->equalTo(''))
             ->will($this->returnValue($command));
-        $this->_subject->dispatch();
+        $this->subject->dispatch();
     }
 
     /**
@@ -208,17 +208,17 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $filter = 'true';
         $command = $this->getMock('Filter_PluginInfoCommand');
         $command->expects($this->once())->method('execute');
-        $this->_commandFactory->expects($this->once())
+        $this->commandFactory->expects($this->once())
             ->method('makePluginInfoCommand')
             ->will($this->returnValue($command));
         $command = $this->getMockBuilder('Filter_FilterPagesCommand')
             ->disableOriginalConstructor()->getMock();
-        $this->_commandFactory->expects($this->once())
+        $this->commandFactory->expects($this->once())
             ->method('makeFilterPagesCommand')
             ->will($this->returnValue($command));
-        $this->_subject = new Filter_Controller($this->_commandFactory);
-        new PHPUnit_Extensions_MockFunction('print_plugin_admin', $this->_subject);
-        $this->_subject->dispatch();
+        $this->subject = new Filter_Controller($this->commandFactory);
+        new PHPUnit_Extensions_MockFunction('print_plugin_admin', $this->subject);
+        $this->subject->dispatch();
     }
 
     /**
@@ -239,16 +239,16 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $admin = 'plugin_config';
         $command = $this->getMockBuilder('Filter_FilterPagesCommand')
             ->disableOriginalConstructor()->getMock();
-        $this->_commandFactory->expects($this->once())
+        $this->commandFactory->expects($this->once())
             ->method('makeFilterPagesCommand')
             ->will($this->returnValue($command));
-        $this->_subject = new Filter_Controller($this->_commandFactory);
+        $this->subject = new Filter_Controller($this->commandFactory);
         $pluginAdminCommonSpy = new PHPUnit_Extensions_MockFunction(
-            'plugin_admin_common', $this->_subject
+            'plugin_admin_common', $this->subject
         );
         $pluginAdminCommonSpy->expects($this->once());
-        new PHPUnit_Extensions_MockFunction('print_plugin_admin', $this->_subject);
-        $this->_subject->dispatch();
+        new PHPUnit_Extensions_MockFunction('print_plugin_admin', $this->subject);
+        $this->subject->dispatch();
     }
 
     /**
@@ -260,11 +260,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     {
         $command = $this->getMockBuilder('Filter_FilterSelectionCommand')
             ->disableOriginalConstructor()->getMock();
-        $this->_commandFactory->expects($this->once())
+        $this->commandFactory->expects($this->once())
             ->method('makeFilterSelectionCommand')
             ->with($this->equalTo(array('', 'foo', 'bar', 'baz')))
             ->will($this->returnValue($command));
-        $this->_subject->renderFilterSelection();
+        $this->subject->renderFilterSelection();
     }
 
     /**
@@ -281,12 +281,12 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $plugin_cf['filter']['categories'] = '';
         $command = $this->getMockBuilder('Filter_FilterPagesCommand')
             ->disableOriginalConstructor()->getMock();
-        $this->_commandFactory->expects($this->once())
+        $this->commandFactory->expects($this->once())
             ->method('makeFilterSelectionCommand')
             ->with($this->equalTo(array()))
             ->will($this->returnValue($command));
-        $this->_subject = new Filter_Controller($this->_commandFactory);
-        $this->_subject->renderFilterSelection();
+        $this->subject = new Filter_Controller($this->commandFactory);
+        $this->subject->renderFilterSelection();
     }
 }
 

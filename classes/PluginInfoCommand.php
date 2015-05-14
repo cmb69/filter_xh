@@ -35,7 +35,7 @@ class Filter_PluginInfoCommand
     {
         global $o;
 
-        $o .= $this->_render();
+        $o .= $this->render();
     }
 
     /**
@@ -43,7 +43,7 @@ class Filter_PluginInfoCommand
      *
      * @return string (X)HTML.
      */
-    private function _render()
+    protected function render()
     {
         return '<h1>Filter &ndash; Info</h1>';
     }

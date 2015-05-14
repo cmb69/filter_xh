@@ -31,7 +31,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
      *
      * @var Filter_CommandFactory
      */
-    private $_subject;
+    protected $subject;
 
     /**
      * Sets up the test fixture.
@@ -40,7 +40,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->_subject = new Filter_CommandFactory();
+        $this->subject = new Filter_CommandFactory();
     }
 
     /**
@@ -52,7 +52,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(
             'Filter_FilterPagesCommand',
-            $this->_subject->makeFilterPagesCommand('user')
+            $this->subject->makeFilterPagesCommand('user')
         );
     }
 
@@ -65,7 +65,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(
             'Filter_FilterSelectionCommand',
-            $this->_subject->makeFilterSelectionCommand(array())
+            $this->subject->makeFilterSelectionCommand(array())
         );
     }
 
@@ -78,7 +78,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(
             'Filter_PluginInfoCommand',
-            $this->_subject->makePluginInfoCommand()
+            $this->subject->makePluginInfoCommand()
         );
     }
 }

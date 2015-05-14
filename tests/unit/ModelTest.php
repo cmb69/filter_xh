@@ -62,7 +62,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
     {
         $subject = new Filter_Model($category);
         $subject->hidePages();
-        $this->assertEquals($expected, $this->_getVisiblePages());
+        $this->assertEquals($expected, $this->getVisiblePages());
     }
 
     /**
@@ -86,13 +86,13 @@ class ModelTest extends PHPUnit_Framework_TestCase
      *
      * @global int The number of pages.
      */
-    private function _getVisiblePages()
+    protected function getVisiblePages()
     {
         global $cl;
 
         $result = array();
         for ($i = 0; $i < $cl; ++$i) {
-            if ($this->_isPageVisible($i)) {
+            if ($this->isPageVisible($i)) {
                 $result[] = $i;
             }
         }
@@ -108,7 +108,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
      *
      * @global array The content of the pages.
      */
-    private function _isPageVisible($pageIndex)
+    protected function isPageVisible($pageIndex)
     {
         global $c;
 

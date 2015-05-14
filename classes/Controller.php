@@ -29,28 +29,28 @@ class Filter_Controller
      *
      * @var Filter_CommandFactory
      */
-    private $_commandFactory;
+    protected $commandFactory;
 
     /**
      * Whether the plugin adminstration is requested.
      *
      * @var bool
      */
-    private $_isAdministration;
+    protected $isAdministration;
 
     /**
      * The available categories.
      *
      * @var array
      */
-    private $_categories;
+    protected $categories;
 
     /**
      * The requested category.
      *
      * @var string
      */
-    private $_category;
+    protected $category;
 
     /**
      * Initializes a new instance.
@@ -63,9 +63,9 @@ class Filter_Controller
     {
         global $adm, $filter, $plugin_cf;
 
-        $this->_commandFactory = $commandFactory;
-        $this->_isAdministration =  ($adm && $filter == 'true');
-        $this->_categories = $this->_splitCategories(
+        $this->commandFactory = $commandFactory;
+        $this->isAdministration =  ($adm && $filter == 'true');
+        $this->categories = $this->splitCategories(
             $plugin_cf['filter']['categories']
         );
     }
@@ -77,7 +77,7 @@ class Filter_Controller
      *
      * @return array
      */
-    private function _splitCategories($categories)
+    protected function splitCategories($categories)
     {
         if (trim($categories) == '') {
             return array();
@@ -93,11 +93,11 @@ class Filter_Controller
      */
     public function dispatch()
     {
-        $this->_determineCategory();
-        $this->_setCookie();
-        $this->_filterPages();
-        if ($this->_isAdministration) {
-            $this->_administrationDispatch();
+        $this->determineCategory();
+        $this->setCookie();
+        $this->filterPages();
+        if ($this->isAdministration) {
+            $this->administrationDispatch();
         }
     }
 
@@ -106,7 +106,7 @@ class Filter_Controller
      *
      * @return void
      */
-    private function _determineCategory()
+    protected function determineCategory()
     {
         if (isset($_GET['filter_category'])) {
             $category = stsl($_GET['filter_category']);
@@ -115,10 +115,10 @@ class Filter_Controller
         } else {
             $category = '';
         }
-        if (in_array($category, $this->_categories)) {
-            $this->_category = $category;
+        if (in_array($category, $this->categories)) {
+            $this->category = $category;
         } else {
-            $this->_category = '';
+            $this->category = '';
         }
     }
 
@@ -127,10 +127,10 @@ class Filter_Controller
      *
      * @return void
      */
-    private function _setCookie()
+    protected function setCookie()
     {
         if (isset($_GET['filter_category'])) {
-            setcookie('filter_category', $this->_category, 0, CMSIMPLE_ROOT);
+            setcookie('filter_category', $this->category, 0, CMSIMPLE_ROOT);
         }
     }
 
@@ -139,9 +139,9 @@ class Filter_Controller
      *
      * @return void
      */
-    private function _filterPages()
+    protected function filterPages()
     {
-        $this->_commandFactory->makeFilterPagesCommand($this->_category)
+        $this->commandFactory->makeFilterPagesCommand($this->category)
             ->execute();
     }
 
@@ -154,14 +154,14 @@ class Filter_Controller
      * @global string The value of the admin GP parameter.
      * @global string The output of the contents area.
      */
-    private function _administrationDispatch()
+    protected function administrationDispatch()
     {
         global $action, $admin, $o;
 
         $o .= print_plugin_admin('off');
         switch ($admin) {
         case '':
-            $this->_commandFactory->makePluginInfoCommand()->execute();
+            $this->commandFactory->makePluginInfoCommand()->execute();
             break;
         default:
             $o .= plugin_admin_common($action, $admin, 'filter');
@@ -175,8 +175,8 @@ class Filter_Controller
      */
     public function renderFilterSelection()
     {
-        return $this->_commandFactory
-            ->makeFilterSelectionCommand($this->_categories)
+        return $this->commandFactory
+            ->makeFilterSelectionCommand($this->categories)
             ->execute();
     }
 }

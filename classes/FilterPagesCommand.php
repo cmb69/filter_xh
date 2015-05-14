@@ -29,14 +29,14 @@ class Filter_FilterPagesCommand
      *
      * @var Filter_Model
      */
-    private $_model;
+    protected $model;
 
     /**
      * Whether we're in view mode.
      *
      * @var bool
      */
-    private $_isViewMode;
+    protected $isViewMode;
 
     /**
      * Initializes a new instance.
@@ -52,8 +52,8 @@ class Filter_FilterPagesCommand
     {
         global $adm, $edit;
 
-        $this->_model = $model;
-        $this->_isViewMode = !($adm && $edit);
+        $this->model = $model;
+        $this->isViewMode = !($adm && $edit);
     }
 
     /**
@@ -63,8 +63,8 @@ class Filter_FilterPagesCommand
      */
     public function execute()
     {
-        if ($this->_isViewMode) {
-            $this->_model->hidePages();
+        if ($this->isViewMode) {
+            $this->model->hidePages();
         }
     }
 }

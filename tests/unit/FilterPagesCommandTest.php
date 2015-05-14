@@ -31,7 +31,7 @@ class FilterPagesCommandTest extends PHPUnit_Framework_TestCase
      *
      * @var Filter_Model
      */
-    private $_model;
+    protected $model;
 
     /**
      * Sets up the test fixture.
@@ -40,7 +40,7 @@ class FilterPagesCommandTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->_model = $this->getMockBuilder('Filter_Model')
+        $this->model = $this->getMockBuilder('Filter_Model')
             ->disableOriginalConstructor()->getMock();
     }
 
@@ -51,8 +51,8 @@ class FilterPagesCommandTest extends PHPUnit_Framework_TestCase
      */
     public function testPagesAreFilteredInViewMode()
     {
-        $this->_model->expects($this->once())->method('hidePages');
-        $subject = new Filter_FilterPagesCommand($this->_model);
+        $this->model->expects($this->once())->method('hidePages');
+        $subject = new Filter_FilterPagesCommand($this->model);
         $subject->execute();
     }
 
@@ -69,8 +69,8 @@ class FilterPagesCommandTest extends PHPUnit_Framework_TestCase
         global $adm, $edit;
 
         $adm = $edit = true;
-        $this->_model->expects($this->never())->method('hidePages');
-        $subject = new Filter_FilterPagesCommand($this->_model);
+        $this->model->expects($this->never())->method('hidePages');
+        $subject = new Filter_FilterPagesCommand($this->model);
         $subject->execute();
     }
 }

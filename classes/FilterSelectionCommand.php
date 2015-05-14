@@ -29,14 +29,14 @@ class Filter_FilterSelectionCommand
      *
      * @var array
      */
-    private $_categories;
+    protected $categories;
 
     /**
      * The current page URL.
      *
      * @var string
      */
-    private $_pageUrl;
+    protected $pageUrl;
 
     /**
      * Initializes a new instance.
@@ -52,8 +52,8 @@ class Filter_FilterSelectionCommand
     {
         global $sn, $su;
 
-        $this->_pageUrl = $sn . '?' . $su;
-        $this->_categories = (array) $categories;
+        $this->pageUrl = $sn . '?' . $su;
+        $this->categories = (array) $categories;
     }
 
     /**
@@ -64,8 +64,8 @@ class Filter_FilterSelectionCommand
     public function execute()
     {
         $result = '<ul class="filter_categories">';
-        foreach ($this->_categories as $category) {
-            $result .= $this->_renderListItem($category);
+        foreach ($this->categories as $category) {
+            $result .= $this->renderListItem($category);
         }
         $result .= '</ul>';
         return $result;
@@ -80,11 +80,11 @@ class Filter_FilterSelectionCommand
      *
      * @global array The localization of the plugins.
      */
-    private function _renderListItem($category)
+    protected function renderListItem($category)
     {
         global $plugin_tx;
 
-        $href = $this->_pageUrl . '&amp;filter_category=' . $category;
+        $href = $this->pageUrl . '&amp;filter_category=' . $category;
         $label = $category != '' ? $category : $plugin_tx['filter']['label_all'];
         $result = '<li><a href="' . $href. '">' . $label . '</a></li>';
         return $result;

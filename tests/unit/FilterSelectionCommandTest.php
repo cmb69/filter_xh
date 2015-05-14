@@ -31,7 +31,7 @@ class FilterSelectionCommandTest extends PHPUnit_Framework_TestCase
      *
      * @var Filter_FilterSelectionCommand
      */
-    private $_subject;
+    protected $subject;
 
     /**
      * Sets up the test fixture.
@@ -49,7 +49,7 @@ class FilterSelectionCommandTest extends PHPUnit_Framework_TestCase
         $sn = '/xh/';
         $su = 'Page';
         $plugin_tx['filter'] = array('label_all' => 'all');
-        $this->_subject = new Filter_FilterSelectionCommand(
+        $this->subject = new Filter_FilterSelectionCommand(
             array('', 'foo', 'bar', 'baz')
         );
     }
@@ -69,7 +69,7 @@ class FilterSelectionCommandTest extends PHPUnit_Framework_TestCase
                 'only' => array('tag' => 'li')
             )
         );
-        $this->_assertResultMatches($matcher);
+        $this->assertResultMatches($matcher);
     }
 
     /**
@@ -85,7 +85,7 @@ class FilterSelectionCommandTest extends PHPUnit_Framework_TestCase
             'content' => 'all',
             'parent' => array('tag' => 'li')
         );
-        $this->_assertResultMatches($matcher);
+        $this->assertResultMatches($matcher);
     }
 
     /**
@@ -95,9 +95,9 @@ class FilterSelectionCommandTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    private function _assertResultMatches($matcher)
+    protected function assertResultMatches($matcher)
     {
-        @$this->assertTag($matcher, $this->_subject->execute());
+        @$this->assertTag($matcher, $this->subject->execute());
     }
 }
 
