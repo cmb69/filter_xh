@@ -59,7 +59,7 @@ class PluginInfoCommandTest extends PHPUnit_Framework_TestCase
     {
         global $o;
 
-        $this->assertTag($matcher, $o);
+        @$this->assertTag($matcher, $o);
     }
 }
 
