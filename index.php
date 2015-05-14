@@ -18,7 +18,14 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
     exit;
 }
 
+/**
+ * The model.
+ */
 require_once $pth['folder']['plugin_classes'] . 'Model.php';
+
+/**
+ * The presentation layer.
+ */
 require_once $pth['folder']['plugin_classes'] . 'Presentation.php';
 
 /**
