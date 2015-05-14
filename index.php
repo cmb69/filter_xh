@@ -19,16 +19,6 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 }
 
 /**
- * The model.
- */
-require_once $pth['folder']['plugin_classes'] . 'Model.php';
-
-/**
- * The presentation layer.
- */
-require_once $pth['folder']['plugin_classes'] . 'Presentation.php';
-
-/**
  * Renders the filter selection.
  *
  * @return string (X)HTML.
