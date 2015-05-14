@@ -53,6 +53,13 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     protected $setCookieSpy;
 
     /**
+     * The XH_registerStandardMenuItems mock.
+     *
+     * @var object
+     */
+    protected $rspmiMock;
+
+    /**
      * Sets up the test fixture.
      *
      * @return void
@@ -74,12 +81,25 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->setCookieSpy = new PHPUnit_Extensions_MockFunction(
             'setcookie', $this->subject
         );
+        $this->rspmiMock = new PHPUnit_Extensions_MockFunction(
+            'XH_registerStandardPluginMenuItems', null
+        );
         new PHPUnit_Extensions_MockFunction(
             'plugin_admin_common', $this->subject
         );
         new PHPUnit_Extensions_MockFunction(
             'print_plugin_admin', $this->subject
         );
+    }
+
+    /**
+     * Tears down the test fixture.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        $this->rspmiMock->restore();
     }
 
     /**
@@ -197,14 +217,13 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @global bool   Whether we're in admin mode.
      * @global string Whether the filter plugin administration has been requested.
      */
     public function testDispatchExecutesPluginInfoCommand()
     {
-        global $adm, $filter;
+        global $filter;
 
-        $adm = true;
+        $this->defineConstant('XH_ADM', true);
         $filter = 'true';
         $command = $this->getMock('Filter_PluginInfoCommand');
         $command->expects($this->once())->method('execute');
@@ -226,15 +245,14 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @global bool   Whether we're in administration mode.
      * @global string Whether the filter plugin administration is requested.
      * @global string The value of the admin GP parameter.
      */
     public function testDispatchHandlesCommonAdministration()
     {
-        global $adm, $filter, $admin;
+        global $filter, $admin;
 
-        $adm = true;
+        $this->defineConstant('XH_ADM', true);
         $filter = 'true';
         $admin = 'plugin_config';
         $command = $this->getMockBuilder('Filter_FilterPagesCommand')
@@ -287,6 +305,23 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($command));
         $this->subject = new Filter_Controller($this->commandFactory);
         $this->subject->renderFilterSelection();
+    }
+
+    /**
+     * Redefines a constant.
+     *
+     * @param string $name  A name.
+     * @param string $value A value.
+     *
+     * @return void
+     */
+    protected function defineConstant($name, $value)
+    {
+        if (!defined($name)) {
+            define($name, $value);
+        } else {
+            runkit_constant_redefine($name, $value);
+        }
     }
 }
 

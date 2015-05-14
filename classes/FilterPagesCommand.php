@@ -45,15 +45,14 @@ class Filter_FilterPagesCommand
      *
      * @return void
      *
-     * @global bool Whether we're in admin mode.
      * @global bool Whether we're in edit mode.
      */
     public function __construct(Filter_Model $model)
     {
-        global $adm, $edit;
+        global $edit;
 
         $this->model = $model;
-        $this->isViewMode = !($adm && $edit);
+        $this->isViewMode = !(defined('XH_ADM') && XH_ADM && $edit);
     }
 
     /**

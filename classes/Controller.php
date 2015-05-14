@@ -32,13 +32,6 @@ class Filter_Controller
     protected $commandFactory;
 
     /**
-     * Whether the plugin adminstration is requested.
-     *
-     * @var bool
-     */
-    protected $isAdministration;
-
-    /**
      * The available categories.
      *
      * @var array
@@ -58,13 +51,14 @@ class Filter_Controller
      * @param Filter_CommandFactory $commandFactory A command factory.
      *
      * @return void
+     *
+     * @global array The configuration of the plugins.
      */
     public function __construct(Filter_CommandFactory $commandFactory)
     {
-        global $adm, $filter, $plugin_cf;
+        global $plugin_cf;
 
         $this->commandFactory = $commandFactory;
-        $this->isAdministration =  ($adm && $filter == 'true');
         $this->categories = $this->splitCategories(
             $plugin_cf['filter']['categories']
         );
@@ -96,8 +90,11 @@ class Filter_Controller
         $this->determineCategory();
         $this->setCookie();
         $this->filterPages();
-        if ($this->isAdministration) {
-            $this->administrationDispatch();
+        if (defined('XH_ADM') && XH_ADM) {
+            XH_registerStandardPluginMenuItems(false);
+            if ($this->isAdministrationRequested()) {
+                $this->administrationDispatch();
+            }
         }
     }
 
@@ -143,6 +140,22 @@ class Filter_Controller
     {
         $this->commandFactory->makeFilterPagesCommand($this->category)
             ->execute();
+    }
+
+    /**
+     * Returns whether the plugin administration is requested.
+     *
+     * @return bool
+     *
+     * @global string Whether the plugin administration is requested.
+     */
+    protected function isAdministrationRequested()
+    {
+        global $filter;
+
+        return function_exists('XH_wantsPluginAdministration')
+            && XH_wantsPluginAdministration('filter')
+            || isset($filter) && $filter == 'true';
     }
 
     /**

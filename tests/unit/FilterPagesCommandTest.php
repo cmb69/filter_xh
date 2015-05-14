@@ -61,17 +61,34 @@ class FilterPagesCommandTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @global bool Whether we're in admin mode.
      * @global bool Whether we're in edit mode.
      */
     public function testPagesAreNotFilteredInEditMode()
     {
-        global $adm, $edit;
+        global $edit;
 
-        $adm = $edit = true;
+        $this->defineConstant('XH_ADM', true);
+        $edit = true;
         $this->model->expects($this->never())->method('hidePages');
         $subject = new Filter_FilterPagesCommand($this->model);
         $subject->execute();
+    }
+
+    /**
+     * Redefines a constant.
+     *
+     * @param string $name  A name.
+     * @param string $value A value.
+     *
+     * @return void
+     */
+    protected function defineConstant($name, $value)
+    {
+        if (!defined($name)) {
+            define($name, $value);
+        } else {
+            runkit_constant_redefine($name, $value);
+        }
     }
 }
 
