@@ -25,10 +25,8 @@
         </phpcodesniffer>
     </target>
 
-    <target name="compat">
-        <exec command="phpcompatinfo --configuration phpcompatinfo.xml print
-                                     --exclude-pattern filter ."
-              logoutput="true"/>
+    <target name="compat" description="checks PHP requirements">
+        <exec command="phpcompatinfo analyser:run --alias current" logoutput="true"/>
     </target>
 
     <target name="unit-tests" description="runs all unit tests">
@@ -91,7 +89,7 @@
                 <exclude name="composer.json"/>
                 <exclude name="composer.lock"/>
                 <exclude name="coverage.xml"/>
-                <exclude name="phpcompatinfo.xml"/>
+                <exclude name="phpcompatinfo.json"/>
             </fileset>
         </move>
         <delete dir="export"/>
