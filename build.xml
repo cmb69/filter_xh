@@ -55,7 +55,20 @@
     </target>
 -->
     <target name="coverage" description="generates coverage report">
-        <exec command="phpunit --bootstrap=tests/bootstrap.php --configuration coverage.xml" logoutput="true"/>
+        <mkdir dir="tests/coverage"/>
+        <coverage-setup database="tests/coverage/coverage.db">
+            <fileset dir="classes">
+                <include name="*.php"/>
+            </fileset>
+        </coverage-setup>
+        <phpunit bootstrap="tests/bootstrap.php" codecoverage="true">
+            <batchtest>
+                <fileset refid="unit-tests"/>
+            </batchtest>
+        </phpunit>
+        <coverage-report outfile="tests/coverage/coverage.xml">
+            <report todir="tests/coverage" styledir="vendor/phing/phing/etc"/>
+        </coverage-report>
     </target>
 
     <target name="doc" description="generates the developer documentation">
