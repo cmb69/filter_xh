@@ -13,8 +13,6 @@
  * @link      http://3-magi.net/?CMSimple_XH/Filter_XH
  */
 
-require_once './classes/required_classes.php';
-
 /**
  * Testing the filter selection command.
  *
